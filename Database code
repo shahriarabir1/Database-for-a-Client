@@ -1,0 +1,114 @@
+CREATE DATABASE  eshop;
+use  eshop;
+CREATE table Moderator(
+    Moderator_ID int primary key not null AUTO_INCREMENT,
+    Name varchar(200),
+    Salary int,
+    Street_no int,
+    Postal_code int,
+    City varchar(200),
+    Country varchar(200),
+    Email varchar(200)
+);
+CREATE table Customer(
+    Customer_ID int primary key not null AUTO_INCREMENT,
+    Name varchar(200),
+    Street_no int,
+    Postal_code int,
+    City varchar(200),
+    Country varchar(200),
+    Email varchar(200)
+);
+CREATE table Moderator_contact(
+    Moderator_ID int not null AUTO_INCREMENT,
+    Contact_no int ,
+    primary key(Moderator_ID,Contact_no),
+    FOREIGN KEY (Moderator_ID) REFERENCES Moderator(Moderator_ID) 
+);
+CREATE table Customer_contact(
+    Customer_ID int not null AUTO_INCREMENT,
+    Contact_no int ,
+    primary key(Customer_ID,Contact_no),
+    FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID) 
+);
+CREATE table Warehouse(
+    Shelf_no int primary key not null AUTO_INCREMENT,
+    Product_amount int
+);
+CREATE table Product(
+   Product_ID int primary key not null AUTO_INCREMENT,
+    Product_name varchar(200),
+    Short_description varchar(200),
+    Price int,
+    Shelf_no int,
+    foreign key (Shelf_no) REFERENCES Warehouse(Shelf_no)
+);
+CREATE table Product_category(
+   Product_ID int  not null AUTO_INCREMENT,
+   Category varchar(200),
+   primary key(Product_ID,category),
+    foreign key (Product_ID) REFERENCES Product(Product_ID)
+);
+CREATE table Order_p(
+  Order_ID int primary key not null AUTO_INCREMENT,
+    Order_date date,
+    Order_amount int
+  
+);
+CREATE table Buy_Place(
+  Order_ID int ,
+  Product_ID int,
+    Customer_ID int,
+    primary key(Order_ID,Product_ID,Customer_ID),
+    foreign key (Order_ID) REFERENCES Order_p(Order_ID),
+    foreign key (Product_ID) REFERENCES Product(Product_ID),
+    foreign key (Customer_ID) REFERENCES Customer(Customer_ID)
+  
+);
+CREATE table Add_delet(
+  Order_ID int ,
+  Product_ID int,
+   Moderator_ID int,
+    primary key(Order_ID,Product_ID,Moderator_ID),
+    foreign key (Order_ID) REFERENCES Order_p(Order_ID),
+    foreign key (Product_ID) REFERENCES Product(Product_ID),
+    foreign key (Moderator_ID) REFERENCES Moderator(Moderator_ID)
+  
+);
+CREATE table Picking_list(
+   Picking_no int primary key not null AUTO_INCREMENT,
+    Street_no int,
+    Postal_code int,
+    City varchar(200),
+    Country varchar(200),
+    Shelf_no int,
+    foreign key (Shelf_no) REFERENCES Warehouse(Shelf_no)
+);
+CREATE table Invoice(
+    Invoice_no int primary key not null AUTO_INCREMENT,
+    Total_price int
+);
+CREATE table Goes_for(
+  Order_ID int ,
+  Invoice_no int,
+   Picking_no int,
+    primary key(Order_ID,Invoice_no,Picking_no),
+    foreign key (Order_ID) REFERENCES Order_p(Order_ID),
+    foreign key (Picking_no) REFERENCES Picking_list(Picking_no),
+    foreign key (Invoice_no) REFERENCES Invoice(Invoice_no)
+  
+);
+CREATE table Log(
+    Log_no int primary key not null AUTO_INCREMENT,
+    Type varchar(200)
+);
+CREATE table Control(
+  Order_ID int ,
+  Invoice_no int,
+  Log_no int,
+    primary key(Order_ID,Invoice_no,Log_no),
+    foreign key (Order_ID) REFERENCES Order_p(Order_ID),
+    foreign key (Log_no) REFERENCES Log(Log_no),
+    foreign key (Invoice_no) REFERENCES Invoice(Invoice_no)
+  
+);
